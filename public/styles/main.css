@@ -1,0 +1,157 @@
+body {
+  background-color: #f7f7f7;
+  color: #1a1a1a;
+  font-size: clamp(1rem, 1.5vw, 1.125rem);
+}
+
+.container {
+  max-width: 900px !important;
+  width: 100%;
+  margin: 0 auto;
+  padding-left: clamp(1rem, 4vw, 3rem);
+  padding-right: clamp(1rem, 4vw, 3rem);
+}
+
+/**************************  Header  **************************/
+header {
+  background-color: #1c1c1c;
+  color: #ffffff;
+  font-family: "Montserrat", sans-serif;
+  font-size: clamp(1rem, 3vw, 1.5rem);
+}
+
+.header-inner {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.header-inner p {
+  margin-bottom: 0px;
+}
+
+/**************************  Hero  **************************/
+
+/* Title */
+h1 {
+  font-family: "Montserrat", sans-serif;
+  font-weight: bolder;
+  font-size: clamp(2rem, 4vw, 3.5rem) !important;
+  padding: 4rem 0;
+  text-align: center;
+}
+
+/* Image */
+.hero img {
+  width: 100%;
+  max-width: clamp(300px, 80vw, 900px);
+  height: auto;
+  object-fit: cover;
+  display: block;
+  margin: 0 auto;
+  padding-bottom: 2rem;
+}
+
+/* Quotation */
+.quotation {
+  text-align: center;
+  font-size: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  padding: 3rem 1rem;
+  padding-bottom: 2rem;
+}
+
+.quote-icon {
+  color: #cc0000;
+  font-size: clamp(1.8rem, 5vw, 4rem);
+}
+
+.quote-text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+  max-width: 600px;
+}
+
+.quote-text h2 {
+  font-size: clamp(1.5rem, 3.5vw, 2.5rem);
+}
+
+.quote-text p {
+  font-weight: 300;
+  font-size: clamp(1.3rem, 3vw, 1.8rem) !important;
+  margin: 0;
+  font-size: 22px;
+  padding-left: 0;
+}
+
+/**************************  Description  **************************/
+.description {
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+  padding-top: 2rem;
+  padding-bottom: 4rem;
+}
+
+.description p {
+  padding-bottom: 3rem;
+}
+
+.description u {
+    padding-top: 1rem;
+  padding-bottom: 2rem;
+}
+
+ul {
+  padding-left: 0 !important;
+}
+
+li {
+  list-style-type: none;
+  padding-bottom: 1rem;
+}
+
+/**************************  Posts  **************************/
+
+/**************************  Footer  **************************/
+footer {
+  background-color: #171717;
+  color: #f7f7f7;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: clamp(1rem, 3.5vw, 1.5rem);
+}
+
+.social-icons {
+  text-align: center;
+  color: #f7f7f7;
+}
+
+.social-icons a {
+  color: #f7f7f7;
+  margin: 0 10px;
+  font-size: 24px;
+  text-decoration: none;
+}
+
+.pages {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 50px;
+}
+
+small {
+  font-weight: 30;
+  letter-spacing: 1px;
+}
