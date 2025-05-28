@@ -2,14 +2,15 @@ body {
   background-color: #f7f7f7;
   color: #1a1a1a;
   font-size: clamp(1rem, 1.5vw, 1.125rem);
+  font-family: "Montserrat", sans-serif;
 }
 
 .container {
-  max-width: 900px !important;
+  max-width: 1000px !important;
   width: 100%;
   margin: 0 auto;
-  padding-left: clamp(1rem, 4vw, 3rem);
-  padding-right: clamp(1rem, 4vw, 3rem);
+  padding-left: clamp(1rem, 6vw, 4rem) !important;
+  padding-right: clamp(1rem, 6vw, 4rem) !important;
 }
 
 /**************************  Header  **************************/
@@ -45,7 +46,6 @@ h1 {
 /* Image */
 .hero img {
   width: 100%;
-  max-width: clamp(300px, 80vw, 900px);
   height: auto;
   object-fit: cover;
   display: block;
@@ -99,7 +99,7 @@ h1 {
   text-align: left;
   font-size: clamp(1.1rem, 2.5vw, 1.5rem);
   padding-top: 2rem;
-  padding-bottom: 4rem;
+  padding-bottom: 3rem;
 }
 
 .description p {
@@ -107,20 +107,79 @@ h1 {
 }
 
 .description u {
-    padding-top: 1rem;
+  padding-top: 1rem;
   padding-bottom: 2rem;
 }
 
-ul {
+.description ul {
   padding-left: 0 !important;
 }
 
-li {
+.description li {
   list-style-type: none;
   padding-bottom: 1rem;
 }
 
 /**************************  Posts  **************************/
+.posts {
+    margin-bottom: 4rem;
+}
+
+.section-title {
+  text-align: center;
+  font-size: clamp(1.7rem, 4vw, 2.25rem);
+  font-weight: 700;
+  margin-bottom: 4rem;
+  letter-spacing: 0.5px;
+}
+
+.card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  margin-bottom: clamp(1rem, 6vw, 3rem);
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.1);
+}
+
+.card-body {
+  padding: 1.5rem 1.5rem 2rem !important;
+  max-width: 90%;
+}
+
+.card-img-top {
+  padding-bottom: 2rem;
+}
+
+.card-title {
+  padding-bottom: 1.5rem;
+  font-size: 1.4rem;
+  font-weight: 600;
+}
+
+.card-text {
+  padding-bottom: 1rem;
+  font-size: 1.1rem;
+  line-height: 1.5;
+}
+
+.card span {
+  display: block;
+  margin-bottom: 0.3rem;
+  font-size: 0.875rem;
+  color: #777;
+}
+
+.post-link {
+  color: #cc0000;
+  text-align: center;
+  padding-top: 1rem;
+  padding-bottom: 2rem;
+  text-decoration: none;
+  font-size: 1.2rem;
+  font-weight: 500;
+}
 
 /**************************  Footer  **************************/
 footer {
@@ -129,7 +188,7 @@ footer {
   display: flex;
   flex-direction: column;
   align-items: center;
-  font-size: clamp(1rem, 3.5vw, 1.5rem);
+  font-size: clamp(1rem, 3vw, 1.2rem);
 }
 
 .social-icons {
