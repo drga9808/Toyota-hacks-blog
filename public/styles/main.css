@@ -120,7 +120,7 @@ h1 {
   padding-bottom: 1rem;
 }
 
-/**************************  Posts  **************************/
+/**************************  Posts (Home Page)  **************************/
 .posts {
     margin-bottom: 4rem;
 }
@@ -179,6 +179,39 @@ h1 {
   text-decoration: none;
   font-size: 1.2rem;
   font-weight: 500;
+}
+
+/**************************  Individual Post  **************************/
+.post h1 {
+  font-size: clamp(2rem, 5vw, 3rem);
+  margin-bottom: 1rem;
+}
+
+.post-meta {
+  color: #777;
+  font-size: 0.95rem;
+  margin-bottom: 1.5rem;
+}
+
+.post-img {
+  width: 100%;
+  max-width: 900px;
+  margin: 2rem auto;
+  display: block;
+  border-radius: 8px;
+}
+
+.post-body {
+  font-size: 1.125rem;
+  line-height: 1.7;
+  color: #333;
+}
+
+.back-link {
+  display: inline-block;
+  margin-top: 2rem;
+  color: #cc0000;
+  text-decoration: none;
 }
 
 /**************************  Footer  **************************/

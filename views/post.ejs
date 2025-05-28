@@ -1,0 +1,21 @@
+<!---------------------------- Header ---------------------------->
+<%- include('partials/header.ejs') %>
+
+  <section class="container post">
+    <h1>
+      <%= post.title %>
+    </h1>
+    <p class="post-meta">
+      <span>📅 <%= post.date %></span> ·
+      <span>📂 <%= post.category %></span> ·
+      <span>⏱ <%= post.readTime %></span>
+    </p>
+    <img class="post-img" src="<%= post.image %>" alt="<%= post.title %>">
+    <div class="post-body">
+      <%- post.content %>
+    </div>
+    <a class="back-link" href="/">← Back to home</a>
+  </section>
+
+  <!---------------------------- Footer ---------------------------->
+  <%- include('partials/footer.ejs') %>

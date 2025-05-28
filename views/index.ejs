@@ -40,60 +40,30 @@
         <div class="container posts">
 
             <h2 class="section-title">Latest Posts</h2>
-            
+
             <div class="row row-cols-1 row-cols-md-2 g-4">
-                <div class="col">
-                    <div class="card">
-                        <img src="https://res.cloudinary.com/dcco4yq4l/image/upload/v1748372263/parts.png"
-                            class="card-img-top" alt="Toyota parts photo.">
-                        <div class="card-body">
-                            <h5 class="card-title">Toyota Original Parts</h5>
-                            <p class="card-text">Toyota original parts have no equal. People usually associate original
-                                parts with EXPENSIVE DEALERSHIPS…</p>
-                            <span>📂 Category: Parts</span>
-                            <span>📅 May 2025</span>
-                            <span>⏱ 3 min read</span>
-                        </div>
-                        <a class="post-link" href="">Read more...</a>
-                    </div>
-                </div>
-                <div class="col">
-                    <div class="card">
-                        <img src="https://res.cloudinary.com/dcco4yq4l/image/upload/v1748372263/parts.png"
-                            class="card-img-top" alt="Toyota parts photo.">
-                        <div class="card-body">
-                            <h5 class="card-title">Toyota Original Parts</h5>
-                            <p class="card-text">Toyota original parts have no equal. People usually associate original
-                                parts with EXPENSIVE DEALERSHIPS…</p>
-                            <span>📂 Category: Parts</span>
-                            <span>📅 May 2025</span>
-                            <span>⏱ 3 min read</span>
-                        </div>
-                        <a class="post-link" href="">Read more...</a>
-                    </div>
-                </div>
-                <div class="col">
-                    <div class="card">
-                        <img src="..." class="card-img-top" alt="...">
-                        <div class="card-body">
-                            <h5 class="card-title">Card title</h5>
-                            <p class="card-text">This is a longer card with supporting text below as a natural lead-in
-                                to
-                                additional content.</p>
+                <!-- Goes through all posts (Json Objects) and display all the information they have.
+                     Object.keys(posts): Creates an array with all the keys.-->
+                <% Object.keys(posts).forEach(function(slug) { const post=posts[slug]; %>
+                    <div class="col">
+                        <div class="card">
+                            <img src="<%= post.image %>" class="card-img-top" alt="<%= post.title %>">
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    <%= post.title %>
+                                </h5>
+                                <p class="card-text">
+                                    <%= post.description %>
+                                </p>
+                                <span>📂 Category: <%= post.category %></span>
+                                <span>📅 <%= post.date %></span>
+                                <span>⏱ <%= post.readTime %></span>
+                            </div>
+                            <a class="post-link" href="/posts/<%= slug %>">Read more...</a>
                         </div>
                     </div>
-                </div>
-                <div class="col">
-                    <div class="card">
-                        <img src="..." class="card-img-top" alt="...">
-                        <div class="card-body">
-                            <h5 class="card-title">Card title</h5>
-                            <p class="card-text">This is a longer card with supporting text below as a natural lead-in
-                                to
-                                additional content. This content is a little bit longer.</p>
-                        </div>
-                    </div>
-                </div>
+
+                    <% }); %>
             </div>
         </div>
     </section>
