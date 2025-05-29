@@ -19,7 +19,7 @@
 
     <!---------------------------- Description ---------------------------->
     <section>
-        <div class="container description">
+        <div id="about" class="container description">
             <p>Welcome to <b>Toyota Hacks</b> — your go-to resource for keeping your Toyota running like new.</p>
             <p>Whether you’re tackling routine maintenance, fixing common issues, or tracking down quality parts, we’ve
                 got
@@ -45,8 +45,8 @@
                 <!-- Goes through all posts (Json Objects) and display all the information they have.
                      Object.keys(posts): Creates an array with all the keys.-->
                 <% Object.keys(posts).forEach(function(slug) { const post=posts[slug]; %>
-                    <div class="col">
-                        <div class="card">
+                    <div class="col d-flex">
+                        <div class="card flex-fill d-flex flex-column">
                             <img src="<%= post.image %>" class="card-img-top" alt="<%= post.title %>">
                             <div class="card-body">
                                 <h5 class="card-title">
