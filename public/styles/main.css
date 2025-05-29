@@ -13,44 +13,47 @@ body {
   padding-right: clamp(1rem, 6vw, 4rem) !important;
 }
 
-/**************************  Header  **************************/
-header {
-  background-color: #1c1c1c;
-  color: #ffffff;
-  font-family: "Montserrat", sans-serif;
-  font-size: clamp(1rem, 3vw, 1.5rem);
-}
-
-.header-inner {
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
-  margin: 0 auto;
-}
-
-.header-inner a {
-  text-decoration: none;
-  color: #ffffff;
-}
-
-.header-inner p {
-  margin-bottom: 0px;
-  padding-bottom: 0;
-}
-
 html {
   scroll-behavior: smooth;
 }
-/**************************  Hero  **************************/
 
-/* Title */
-h1 {
+/**************************  Header  **************************/
+.navbar {
+  background-color: #1c1c1c;
   font-family: "Montserrat", sans-serif;
-  font-weight: bolder;
-  font-size: clamp(2rem, 4vw, 3.5rem) !important;
-  padding: 4rem 0;
-  text-align: center;
 }
+
+.navbar-nav {
+  padding-bottom: 0;
+}
+
+@media (max-width: 991.98px) {
+  .navbar .navbar-nav {
+    margin-top: 1.5rem;
+  }
+}
+
+.navbar-brand,
+.nav-link {
+  color: #ffffff !important;
+}
+
+.nav-link:hover {
+  color: #cc0000 !important;
+}
+
+/* Space between nav links on large screens */
+@media (min-width: 992px) {
+  .navbar-nav .nav-link {
+    margin-left: 2rem;
+  }
+}
+
+.navbar-toggler {
+  border-color: #ffffff;
+}
+
+/**************************  Hero  **************************/
 
 /* Image */
 .hero img {
@@ -58,8 +61,7 @@ h1 {
   height: auto;
   object-fit: cover;
   display: block;
-  margin: 0 auto;
-  padding-bottom: 2rem;
+  margin: 1rem auto 1rem auto;
 }
 
 /* Quotation */
@@ -217,12 +219,14 @@ h1 {
   padding-bottom: 2rem;
 }
 
-.post-body h3,p,ul {
-    padding-bottom: 0.8rem;
+.post-body h3,
+p,
+ul {
+  padding-bottom: 0.8rem;
 }
 
-.post-body p{
-    font-weight: 300;
+.post-body p {
+  font-weight: 300;
 }
 
 .back-link-wrapper {

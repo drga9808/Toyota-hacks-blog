@@ -1,0 +1,5 @@
+{
+  "html-css-class-completion.includeGlobPatterns": [
+    "public/styles/**/*.css"
+  ]
+}
