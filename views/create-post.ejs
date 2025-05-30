@@ -1,0 +1,68 @@
+<!---------------------------- Header ---------------------------->
+<%- include('partials/header.ejs') %>
+
+  <section class="container pb-5">
+
+    <div class="post-creation">
+      <!-- Header -->
+      <h1>Create Post</h1>
+
+      <form action="/create-post/publish-post" method="POST" enctype="multipart/form-data">
+        <!-- Post Title -->
+        <div class="placeholders">
+          <input id="post-title" type="text" class="form-control" placeholder="Title" required></textarea>
+        </div>
+
+        <!-- Category -->
+        <div class="placeholders">
+          <select class="form-select" id="floatingSelect" aria-label="Floating label select example" required>
+            <option value="" disabled selected>Select a category</option>
+            <option value="1">Parts</option>
+            <option value="2">Maintenance</option>
+            <option value="3">Common Issues</option>
+          </select>
+        </div>
+
+        <!-- Read Time -->
+        <div class="placeholders">
+          <input id="readTime" type="text" class="form-control" placeholder="Read Time" required></textarea>
+        </div>
+
+        <!-- Image Upload with Drag and Drop -->
+        <div class="placeholders">
+          <div id="drop-zone" class="image-upload-box" required>
+            <div class="upload-content">
+              <i class="fas fa-file-upload fa-2x"></i>
+              <p><strong>Upload an Image</strong></p>
+              <p class="file-name">No File Chosen</p>
+            </div>
+            <input type="file" id="post-image" name="image" accept="image/*" style="display: none;">
+          </div>
+          <div id="image-error" class="text-danger mt-2" style="display: none;">
+            <i class="fas fa-exclamation-circle"></i> Please upload an image before publishing the post.
+          </div>
+        </div>
+
+        <!-- Description -->
+        <div class="placeholders">
+          <textarea id="post-description" class="form-control" placeholder="Description" style="height: 80px"
+            required></textarea>
+        </div>
+
+        <!-- Content -->
+        <div class="placeholders">
+          <textarea id="post-content" class="form-control" placeholder="Content" style="height: 200px"
+            required></textarea>
+        </div>
+
+        <!-- Submit button -->
+        <div class="text-end mt-5 text-center" action="/create-post/publish-post" method="POST">
+          <button type="submit" class="btn btn-submit">Publish Post</button>
+        </div>
+      </form>
+    </div>
+
+  </section>
+
+  <!---------------------------- Footer ---------------------------->
+  <%- include('partials/footer.ejs') %>

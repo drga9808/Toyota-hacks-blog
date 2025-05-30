@@ -2,18 +2,34 @@
 <%- include('partials/header.ejs') %>
 
   <section class="container post">
+
+    <!-- Title -->
     <h1>
       <%= post.title %>
     </h1>
-    <p class="post-meta">
-      <span>📅 <%= post.date %></span> ·
-      <span>📂 <%= post.category %></span> ·
-      <span>⏱ <%= post.readTime %></span>
-    </p>
+
+    <!-- Span & Edit -->
+    <div
+      class="d-flex flex-column flex-md-row justify-content-md-between align-items-start align-items-md-center gap-4 pb-md-2">
+      <p class="post-meta mb-0">
+        <span>📅 <%= post.date %></span> ·
+        <span>📂 <%= post.category %></span> ·
+        <span>⏱ <%= post.readTime %></span>
+      </p>
+      <form class="post-edit-button" action="/post/edit/<%= slug %>" method="POST">
+        <button type="submit" class="btn-edit">✏️ Edit</button>
+      </form>
+    </div>
+
+    <!-- Image -->
     <img class="post-img" src="<%= post.image %>" alt="<%= post.title %>">
+
+    <!-- Content -->
     <div class="post-body">
       <%- post.content %>
     </div>
+
+    <!-- Back to home button -->
     <div class="back-link-wrapper">
       <a class="back-link" href="/">← Back to home</a>
     </div>

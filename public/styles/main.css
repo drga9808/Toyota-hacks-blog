@@ -146,52 +146,87 @@ html {
 
 .card {
   transition: transform 0.2s ease, box-shadow 0.2s ease;
-  margin-bottom: clamp(1rem, 6vw, 3rem);
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid #eee;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
 }
 
 .card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08);
 }
 
 .card-body {
-  padding: 1.5rem 1.5rem 2rem !important;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 1.5rem;
 }
 
-.card-img-top {
-  padding-bottom: 2rem;
+/* Post Meta */
+
+.post-meta-list {
+  list-style: none;
+  padding-left: 0;
+  margin-top: 1rem;
+  color: #666;
+  font-size: 0.9rem;
 }
 
-.card-title {
-  padding-bottom: 1.5rem;
-  font-size: 1.4rem;
-  font-weight: 600;
+.post-meta-list li {
+  margin-bottom: 0.25rem;
 }
 
-.card-text {
-  padding-bottom: 1rem;
-  font-size: 1.1rem;
-  line-height: 1.5;
+/* Buttons */
+
+.card-actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-top: auto;
 }
 
-.card span {
-  display: block;
-  margin-bottom: 0.3rem;
-  font-size: 0.875rem;
-  color: #777;
-}
-
-.post-link {
-  color: #cc0000;
-  text-align: center;
-  padding-top: 1rem;
-  padding-bottom: 2rem;
+.card-actions .btn-readmore {
   text-decoration: none;
-  font-size: 1.2rem;
-  font-weight: 500;
+  font-weight: 600;
+  font-size: 0.95rem;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.card-actions .btn-readmore {
+  background-color: #cc0000;
+  color: #fff;
+}
+
+.card-actions .btn-readmore:hover {
+  background-color: #a90000;
+}
+
+.btn-edit {
+  background-color: #f5f5f5;
+  color: #333;
+  border: 1px solid #ddd;
+}
+
+.btn-edit:hover {
+  background-color: #eee;
+  border-color: #ccc;
 }
 
 /**************************  Individual Post  **************************/
+
+.post-edit-button .btn-edit {
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.95rem;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
 .post h1 {
   font-size: clamp(2rem, 5vw, 3rem);
   margin-bottom: 1rem;
@@ -200,7 +235,16 @@ html {
 .post-meta {
   color: #777;
   font-size: clamp(0.9rem, 2.5vw, 1.1rem);
-  margin-bottom: 1.5rem;
+  margin-bottom: 0;
+  padding-bottom: 0;
+  align-content: center;
+}
+
+/* Not-Mobile sizes */
+@media (min-width: 400px) {
+  .post-meta {
+    padding-left: 0.6rem;
+  }
 }
 
 .post-img {
@@ -229,17 +273,176 @@ ul {
   font-weight: 300;
 }
 
-.back-link-wrapper {
+/* Back to Home button */
+.post .back-link-wrapper {
   display: flex;
   justify-content: center;
   margin: 2rem 0;
   padding-bottom: 2rem;
 }
 
-.back-link {
+.post .back-link {
   font-size: clamp(1.125rem, 2.5vw, 1.3rem);
   color: #cc0000;
   text-decoration: none;
+}
+
+/**************************  Post Creation Page  **************************/
+.post-creation,
+.post-edit {
+  background-color: #e9ecef;
+  border-radius: 10px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
+  margin: 0 1rem;
+  padding: 3rem 3rem;
+}
+
+/* Mobile sizes */
+@media (max-width: 400px) {
+  .post-creation,
+  .post-edit {
+    margin: 0 0.1rem;
+    padding: 1.7rem 1.7rem;
+  }
+}
+
+.post-creation h1,
+.post-edit h1 {
+  font-size: clamp(2rem, 5vw, 3rem);
+  margin-bottom: 2rem;
+}
+
+.placeholders {
+  padding-bottom: 1.5rem;
+}
+
+#post-title {
+  font-size: clamp(1.3rem, 4vw, 1.5rem) !important;
+}
+
+/* Image */
+.image-upload-box {
+  display: block;
+  width: 100%;
+  padding: 3rem 1rem;
+  text-align: center;
+  border: 2px dashed #ccc;
+  border-radius: 8px;
+  background-color: #f8f9fa;
+  color: #6c757d;
+  cursor: pointer;
+  transition: border-color 0.2s ease;
+}
+
+.image-upload-box:hover {
+  border-color: #cc0000;
+}
+
+.image-upload-box.dragover {
+  border-color: #cc0000;
+  background-color: #f0f0f0;
+}
+
+.upload-content i {
+  margin-bottom: 0.5rem;
+  color: #999;
+}
+
+.upload-content p {
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+/* Failed in Uploading the image */
+.image-upload-box.invalid {
+  border: 2px dashed #cc0000;
+  background-color: #fff0f0;
+}
+
+.image-upload-box.invalid .upload-content {
+  color: #cc0000;
+}
+
+#image-error {
+  font-size: 0.9rem;
+  color: #cc0000;
+  display: none;
+}
+
+/* Button */
+.text-end .btn-submit {
+  background-color: #cc0000;
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 1rem;
+  padding: 0.75rem 2rem;
+  border: none;
+  border-radius: 6px;
+  transition: background-color 0.2s ease;
+}
+
+.text-end .btn-submit:hover {
+  background-color: #a30000;
+  cursor: pointer;
+}
+
+/**************************  Post Edition Page  **************************/
+.post-edit label {
+  font-weight: bolder;
+  padding-bottom: 0.3rem;
+  padding-left: 0.5rem;
+}
+
+.post-edit input {
+  font-weight: 300;
+}
+
+/* Save Changes button */
+.btn-savechanges {
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.95rem;
+  padding: 0.5rem 1rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  border: none; /* ✅ This line fixes the issue */
+  border-radius: 6px;
+  transition: background-color 0.2s ease, color 0.2s ease;
+  background-color: #171717;
+  color: #fff;
+}
+
+.btn-savechanges:hover {
+  background-color: #cc0000;
+}
+
+/* Back to Home button */
+.post-edit .back-link-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-top: 2rem;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+
+.post-edit .back-link {
+  font-size: clamp(1.125rem, 2.5vw, 1.3rem);
+  color: #cc0000;
+  text-decoration: none;
+}
+
+/* Delete button */
+.btn-danger {
+  background-color: #dc3545;
+  color: white;
+  font-weight: 600;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 6px;
+  transition: background-color 0.2s ease;
+}
+
+.btn-danger:hover {
+  background-color: #b02a37;
 }
 
 /**************************  Footer  **************************/
