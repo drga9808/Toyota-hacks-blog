@@ -16,7 +16,7 @@
         <span>📂 <%= post.category %></span> ·
         <span>⏱ <%= post.readTime %></span>
       </p>
-      <form class="post-edit-button" action="/post/edit/<%= slug %>" method="POST">
+      <form class="post-edit-button" action="/post/edit/<%= slug %>" method="GET">
         <button type="submit" class="btn-edit">✏️ Edit</button>
       </form>
     </div>

@@ -10,12 +10,12 @@
       <form action="/create-post/publish-post" method="POST" enctype="multipart/form-data">
         <!-- Post Title -->
         <div class="placeholders">
-          <input id="post-title" type="text" class="form-control" placeholder="Title" required></textarea>
+          <input id="post-title" type="text" name="title" class="form-control" placeholder="Title" required></textarea>
         </div>
 
         <!-- Category -->
         <div class="placeholders">
-          <select class="form-select" id="floatingSelect" aria-label="Floating label select example" required>
+          <select class="form-select" id="floatingSelect" name="category" aria-label="Floating label select example" required>
             <option value="" disabled selected>Select a category</option>
             <option value="1">Parts</option>
             <option value="2">Maintenance</option>
@@ -25,7 +25,7 @@
 
         <!-- Read Time -->
         <div class="placeholders">
-          <input id="readTime" type="text" class="form-control" placeholder="Read Time" required></textarea>
+          <input id="readTime" type="text" name="readTime" class="form-control" placeholder="Read Time" required></textarea>
         </div>
 
         <!-- Image Upload with Drag and Drop -->
@@ -45,13 +45,13 @@
 
         <!-- Description -->
         <div class="placeholders">
-          <textarea id="post-description" class="form-control" placeholder="Description" style="height: 80px"
+          <textarea id="post-description" name="description" class="form-control" placeholder="Description" style="height: 80px"
             required></textarea>
         </div>
 
         <!-- Content -->
         <div class="placeholders">
-          <textarea id="post-content" class="form-control" placeholder="Content" style="height: 200px"
+          <textarea id="post-content" name="content" class="form-control" placeholder="Content" style="height: 200px"
             required></textarea>
         </div>
 

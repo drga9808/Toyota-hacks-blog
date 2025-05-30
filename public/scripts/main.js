@@ -68,11 +68,14 @@ if (dropZone) {
   });
 
   // Form submission validation
-  form.addEventListener("submit", (e) => {
-    if (!fileInput.files || fileInput.files.length === 0) {
-      e.preventDefault();
-      document.getElementById("image-error").style.display = "block";
-      dropZone.classList.add("invalid");
-    }
-  });
+  // Only require image if on create-post page
+  if (window.location.pathname.includes("create-post")) {
+    form.addEventListener("submit", (e) => {
+      if (!fileInput.files || fileInput.files.length === 0) {
+        e.preventDefault();
+        document.getElementById("image-error").style.display = "block";
+        dropZone.classList.add("invalid");
+      }
+    });
+  }
 }

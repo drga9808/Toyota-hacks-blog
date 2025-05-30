@@ -5,7 +5,7 @@
             <h1>Edit Post</h1>
 
             <!-- MAIN FORM: Edit + Save Changes -->
-            <form action="/post/<%= slug %>" method="POST">
+            <form action="/edit-post/<%= slug %>" method="POST" enctype="multipart/form-data">
                 <!-- Post Title -->
                 <div class="placeholders">
                     <label>Title:</label>
@@ -15,7 +15,7 @@
                 <!-- Post Date -->
                 <div class="placeholders">
                     <label>Date:</label>
-                    <input type="text" name="date" value="<%= post.date %>" class="form-control">
+                    <input type="date" name="date" value="<%= post.date %>" class="form-control" readonly>
                 </div>
 
                 <!-- Category -->
@@ -35,17 +35,21 @@
                     <input type="text" name="readTime" value="<%= post.readTime %>" class="form-control">
                 </div>
 
-                <!-- Image -->
-                <div class="row align-items-start mb-5">
-                    <div class="col-md-6">
-                        <label class="mb-2" for="image">Image URL:</label>
-                        <input type="text" id="image" name="image" value="<%= post.image %>" class="form-control mb-4">
+                <!-- Image Upload with Drag and Drop -->
+                <div class="placeholders">
+                    <label class="mb-2">Upload an Image:</label>
+                    <div id="drop-zone" class="image-upload-box">
+                        <div class="upload-content">
+                            <i class="fas fa-file-upload fa-2x"></i>
+                            <p><strong>Upload an Image</strong></p>
+                            <p class="file-name">Current: <%= post.image.split("/").pop() %>
+                            </p>
+                        </div>
+                        <input type="file" id="post-image" name="image" accept="image/*" style="display: none;">
                     </div>
-                    <div class="col-md-6">
-                        <label class="d-block mb-2">Preview:</label>
-                        <img src="<%= post.image %>" alt="Post Image" class="img-fluid border rounded shadow-sm"
-                            style="max-height: 200px;">
-                    </div>
+                </div>
+                <div id="image-error" class="text-danger mt-2" style="display: none;">
+                    <i class="fas fa-exclamation-circle"></i> Please upload an image.
                 </div>
 
                 <!-- Description -->
