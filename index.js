@@ -12,7 +12,7 @@ import { cloudinary, storage } from "./utils/cloudinary.js";
 import { marked } from "marked";
 
 const app = express();
-const port = 3000;
+const PORT = process.env.PORT || 3000;
 
 // Load environment variables
 dotenv.config();
@@ -57,8 +57,8 @@ app.use(
 );
 
 // Start the server
-app.listen(port, () => {
-  console.log(`server started on port ${port}`);
+app.listen(PORT, "0.0.0.0", () => {
+  console.log(`Server running on http://0.0.0.0:${PORT}`);
 });
 
 //============================================================================================
