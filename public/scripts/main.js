@@ -1,30 +1,25 @@
+//==================== Character Limit Logic ====================
 function countCharacters(text) {
   return text.trim().length;
 }
 
 function limitTextarea(id, maxChars) {
   const textarea = document.getElementById(id);
-
   if (textarea) {
     textarea.addEventListener("input", () => {
       let chars = countCharacters(textarea.value);
-
       if (chars > maxChars) {
         textarea.value = textarea.value.trim().slice(0, maxChars);
-        chars = maxChars;
       }
     });
   }
 }
 
-//******************************* Image Validation and Draggable *******************************
-
-// Character limits
-limitTextarea("post-title", 80);
+limitTextarea("post-title", 60);
 limitTextarea("post-description", 200);
 limitTextarea("post-content", 2000);
 
-// Get DOM elements
+//==================== Image Upload Drag & Drop ====================
 const dropZone = document.getElementById("drop-zone");
 
 if (dropZone) {
@@ -32,10 +27,8 @@ if (dropZone) {
   const fileNameDisplay = dropZone.querySelector(".file-name");
   const form = document.querySelector("form");
 
-  // Click to open file dialog
   dropZone.addEventListener("click", () => fileInput.click());
 
-  // Drag-and-drop handlers
   dropZone.addEventListener("dragover", (e) => {
     e.preventDefault();
     dropZone.classList.add("dragover");
@@ -58,7 +51,6 @@ if (dropZone) {
     }
   });
 
-  // Manual file selection
   fileInput.addEventListener("change", () => {
     if (fileInput.files.length) {
       fileNameDisplay.textContent = fileInput.files[0].name;
@@ -67,8 +59,7 @@ if (dropZone) {
     }
   });
 
-  // Form submission validation
-  // Only require image if on create-post page
+  // Only enforce image upload on create-post page
   if (window.location.pathname.includes("create-post")) {
     form.addEventListener("submit", (e) => {
       if (!fileInput.files || fileInput.files.length === 0) {
@@ -79,3 +70,36 @@ if (dropZone) {
     });
   }
 }
+
+//==================== Markdown Live Preview ====================
+const markdownTextarea = document.getElementById("post-content");
+const markdownPreview = document.getElementById("markdown-preview");
+const togglePreview = document.getElementById("togglePreview");
+
+function renderMarkdownPreview() {
+  if (markdownTextarea && markdownPreview) {
+    markdownPreview.innerHTML = marked.parse(markdownTextarea.value);
+  }
+}
+
+// 1. If toggle exists (create page), conditionally render
+if (togglePreview && markdownTextarea && markdownPreview) {
+  togglePreview.addEventListener("change", () => {
+    markdownPreview.style.display = togglePreview.checked ? "block" : "none";
+    if (togglePreview.checked) renderMarkdownPreview();
+  });
+
+  markdownTextarea.addEventListener("input", () => {
+    if (togglePreview.checked) renderMarkdownPreview();
+  });
+}
+
+// 2. If no toggle (edit page), always render
+if (!togglePreview && markdownTextarea && markdownPreview) {
+  markdownTextarea.addEventListener("input", renderMarkdownPreview);
+  renderMarkdownPreview(); // Initial load
+}
+
+//==================== Login - User validation  ====================
+
+

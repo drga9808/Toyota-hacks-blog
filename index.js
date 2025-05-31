@@ -1,6 +1,7 @@
 //============================================================================================
 //     ============================== Initial Setup ==============================
 //============================================================================================
+
 import dotenv from "dotenv";
 import fs from "fs";
 import path from "path";
@@ -8,42 +9,45 @@ import express from "express";
 import multer from "multer";
 import { fileURLToPath } from "url";
 import { cloudinary, storage } from "./utils/cloudinary.js";
+import { marked } from "marked";
 
 const app = express();
 const port = 3000;
 
-// Cloudinary configuration
+// Load environment variables
 dotenv.config();
 
-// Just stores data in memory
+// Configure Multer to use Cloudinary for image uploads
 const upload = multer({ storage });
 
-// Get the current Directory name
+// Get the current directory path
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// JSON path
+// Path to JSON files
 const postsFilePath = path.join(__dirname, "views", "data", "posts.json");
+const usersFilePath = path.join(__dirname, "views", "data", "users.json");
 
-// Set view engine
+// View engine configuration
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
-// Serve Bootstrap
+// Serve Bootstrap from node_modules
 app.use(
   "/bootstrap",
   express.static(__dirname + "/node_modules/bootstrap/dist")
 );
 
-// Serve main.js
+// Serve static JavaScript files
 app.use("/scripts", express.static(path.join(__dirname, "public", "scripts")));
 
-// Include folder containing the static files.
+// Serve all other static files (images, styles, etc.)
 app.use(express.static("public"));
 
-// Enable data parsing
+// Enable form data parsing
 app.use(express.urlencoded({ extended: true }));
 
+// Start the server
 app.listen(port, () => {
   console.log(`server started on port ${port}`);
 });
@@ -52,7 +56,7 @@ app.listen(port, () => {
 //     ============================== Functions ==============================
 //============================================================================================
 
-// Load posts
+// Load existing posts from JSON file
 function loadPosts() {
   try {
     const data = fs.readFileSync(postsFilePath, "utf-8");
@@ -63,11 +67,12 @@ function loadPosts() {
   }
 }
 
-// Save posts
+// Save updated posts back to JSON file
 function savePosts(posts) {
   fs.writeFileSync(postsFilePath, JSON.stringify(posts, null, 2), "utf-8");
 }
 
+// Generate URL-friendly slug from post title
 function generateSlug(title) {
   return title
     .toLowerCase()
@@ -78,6 +83,7 @@ function generateSlug(title) {
     .replace(/\s+/g, "-");
 }
 
+// Ensure slug is unique by appending a number if needed
 function getUniqueSlug(title, posts) {
   let baseSlug = generateSlug(title);
   let slug = baseSlug;
@@ -90,12 +96,28 @@ function getUniqueSlug(title, posts) {
   return slug;
 }
 
+// Load existing users from JSON file
+function loadUsers() {
+  try {
+    const data = fs.readFileSync(usersFilePath, "utf-8");
+    return JSON.parse(data);
+  } catch (err) {
+    console.error("Failed to load users:", err);
+    return {};
+  }
+}
+
+// Save updated users back to JSON file
+function saveUsers(users) {
+  fs.writeFileSync(usersFilePath, JSON.stringify(users, null, 2), "utf-8");
+}
+
 //============================================================================================
-//     ============================== Load Posts Data ==============================
+//     ============================== Load Data ==============================
 //============================================================================================
 
-// In-memory posts object
 let posts = loadPosts();
+let users = loadUsers();
 
 //============================================================================================
 //     ============================== Routes - Pages ==============================
@@ -111,7 +133,11 @@ app.get("/posts/:slug", (req, res) => {
   const slug = req.params.slug;
   const post = posts[slug];
   if (!post) return res.status(404).send("Post not found");
-  res.render("post", { slug, post });
+
+  // Convert Markdown content to HTML
+  const htmlContent = marked.parse(post.content || "");
+
+  res.render("post", { slug, post: { ...post, content: htmlContent } });
 });
 
 //********************** Create a post **********************
@@ -123,9 +149,19 @@ app.get("/create-post", (req, res) => {
 app.get("/post/edit/:slug", (req, res) => {
   const slug = req.params.slug;
   const post = posts[slug];
-  if (!post) return res.status(404).send("post not found");
+  if (!post) return res.status(404).send("Post not found");
 
   res.render("edit-post", { slug, post });
+});
+
+//********************** Open Login page **********************
+app.get("/login", (req, res) => {
+  res.render("login", { error: undefined });
+});
+
+//********************** Open Register page **********************
+app.get("/register", (req, res) => {
+  res.render("register");
 });
 
 //============================================================================================
@@ -171,7 +207,7 @@ app.post("/edit-post/:slug", upload.single("image"), async (req, res) => {
     // Delete old image from Cloudinary
     if (oldPublicId) await cloudinary.uploader.destroy(oldPublicId);
 
-    // Update with new image
+    // Update with new image info
     image = req.file.path;
     public_id = req.file.filename;
   }
@@ -188,6 +224,7 @@ app.post("/edit-post/:slug", upload.single("image"), async (req, res) => {
   };
 
   savePosts(posts);
+
   res.redirect(`/posts/${slug}`);
 });
 
@@ -212,4 +249,32 @@ app.post("/edit-post/delete-post/:slug", async (req, res) => {
   delete posts[slug];
   savePosts(posts);
   res.redirect("/");
+});
+
+//********************** Validate login info **********************
+app.post("/login", (req, res) => {
+  const { email, password } = req.body;
+  const user = users[email];
+
+  if (user && user.password === password) {
+    // Successful login
+    res.redirect("/");
+  } else {
+    // Failed login — render with error
+    res.render("login", { error: "Invalid email or password." });
+  }
+});
+
+//********************** Register new user **********************
+app.post("/register", (req, res) => {
+  const { name, email, password } = req.body;
+
+  users[name] = {
+    email,
+    password,
+  };
+
+  saveUsers(users);
+
+  res.redirect("/login");
 });

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login | Toyota Hacks</title>
+    <link rel="stylesheet" href="/styles/login.css" />
+    <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css" />
+    <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet'>
+
+</head>
+
+<body>
+
+    <!-- Navbar -->
+    <%- include('partials/header') %>
+
+        <div class="login-container">
+            <h2 class="login-title">Login to Toyota Hacks</h2>
+            <% if (typeof error !=="undefined" ) { %>
+                <div class="text-danger text-center mb-3">
+                    <strong>
+                        <%= error %>
+                    </strong>
+                </div>
+                <% } %>
+                    <form action="/login" method="POST">
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email address</label>
+                            <input type="email" class="form-control" id="email" name="email" required />
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Password</label>
+                            <input type="password" class="form-control" id="password" name="password" required />
+                        </div>
+
+                        <button type="submit" class="btn-login w-60 py-2 rounded">Login</button>
+
+                        <div class="form-text mt-3 text-center">
+                            Don't have an account? <a href="/register">Sign up</a>
+                        </div>
+
+                        <div class="test-hint-box mt-4 text-center">
+                            <p class="mb-1"><strong>Test Account</strong></p>
+                            <div class="credentials">
+                                <code>test@toyotahacksblog.com</code><br>
+                                <code>Password: Be-creative</code>
+                            </div>
+                        </div>
+                    </form>
+        </div>
+
+        <!-- Footer -->
+        <%- include('partials/footer') %>
+
+</body>
+
+</html>

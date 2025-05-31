@@ -54,14 +54,23 @@
 
                 <!-- Description -->
                 <div class="placeholders">
-                    <label>Description:</label>
-                    <textarea name="description" class="form-control"><%= post.description %></textarea>
+                    <label>Description</label>
+                    <textarea name="description" required class="form-control"
+                        style="height: 80px"><%= post.description %></textarea>
                 </div>
 
                 <!-- Content -->
                 <div class="placeholders">
-                    <label>Content (HTML allowed):</label>
-                    <textarea name="content" class="form-control mb-3" rows="10"><%= post.content %></textarea>
+                    <label for="post-content" class="form-label">Post Content</label>
+                    <textarea id="post-content" name="content" class="form-control"
+                        placeholder="Use Markdown (e.g. # Heading, **bold**, - list)" style="height: 200px"
+                        required><%= post.content %></textarea>
+                </div>
+
+                <!-- Live Preview -->
+                <div class="placeholders mt-4">
+                    <label class="form-label fw-bold">Live Preview</label>
+                    <div id="markdown-preview" class="p-3 border rounded bg-light" style="min-height: 200px;"></div>
                 </div>
 
                 <!-- Save Changes Button -->

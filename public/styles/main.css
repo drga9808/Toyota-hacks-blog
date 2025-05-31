@@ -53,6 +53,23 @@ html {
   border-color: #ffffff;
 }
 
+/* Login Button */
+.btn-outline-light {
+  border-color: #fff;
+  color: #fff;
+}
+
+.btn-outline-light:hover {
+  background-color: #cc0000;
+  border-color: #cc0000;
+  color: #fff;
+}
+
+.navbar .btn-sm {
+  padding-top: 0.4rem;
+  padding-bottom: 0.4rem;
+}
+
 /**************************  Hero  **************************/
 
 /* Image */
@@ -162,6 +179,15 @@ html {
   flex-direction: column;
   justify-content: space-between;
   padding: 1.5rem;
+}
+
+@media (min-width: 400px) {
+  .card-title {
+    min-height: 50px;
+  }
+  .card-text {
+    min-height: 100px;
+  }
 }
 
 /* Post Meta */
@@ -367,6 +393,18 @@ ul {
   font-size: 0.9rem;
   color: #cc0000;
   display: none;
+}
+
+.post-creation label {
+  font-weight: 600;
+  display: block;
+  margin-bottom: 0.4rem;
+  font-size: 1rem;
+  padding-left: 0.2rem;
+}
+
+.post-creation small {
+  font-weight: 200;
 }
 
 /* Button */

@@ -2,35 +2,33 @@
 <%- include('partials/header.ejs') %>
 
   <section class="container pb-5">
-
     <div class="post-creation">
-      <!-- Header -->
       <h1>Create Post</h1>
 
       <form action="/create-post/publish-post" method="POST" enctype="multipart/form-data">
-        <!-- Post Title -->
+        <!-- Title -->
         <div class="placeholders">
-          <input id="post-title" type="text" name="title" class="form-control" placeholder="Title" required></textarea>
+          <input id="post-title" type="text" name="title" class="form-control" placeholder="Title" required>
         </div>
 
         <!-- Category -->
         <div class="placeholders">
-          <select class="form-select" id="floatingSelect" name="category" aria-label="Floating label select example" required>
+          <select class="form-select" name="category" required>
             <option value="" disabled selected>Select a category</option>
-            <option value="1">Parts</option>
-            <option value="2">Maintenance</option>
-            <option value="3">Common Issues</option>
+            <option value="Parts">Parts</option>
+            <option value="Maintenance">Maintenance</option>
+            <option value="Common Issues">Common Issues</option>
           </select>
         </div>
 
         <!-- Read Time -->
         <div class="placeholders">
-          <input id="readTime" type="text" name="readTime" class="form-control" placeholder="Read Time" required></textarea>
+          <input id="readTime" type="text" name="readTime" class="form-control" placeholder="Read Time" required>
         </div>
 
-        <!-- Image Upload with Drag and Drop -->
+        <!-- Image Upload -->
         <div class="placeholders">
-          <div id="drop-zone" class="image-upload-box" required>
+          <div id="drop-zone" class="image-upload-box">
             <div class="upload-content">
               <i class="fas fa-file-upload fa-2x"></i>
               <p><strong>Upload an Image</strong></p>
@@ -45,23 +43,30 @@
 
         <!-- Description -->
         <div class="placeholders">
-          <textarea id="post-description" name="description" class="form-control" placeholder="Description" style="height: 80px"
-            required></textarea>
+          <textarea id="post-description" name="description" class="form-control" placeholder="Short description"
+            style="height: 80px" required></textarea>
         </div>
 
-        <!-- Content -->
+        <!-- Post Content -->
         <div class="placeholders">
-          <textarea id="post-content" name="content" class="form-control" placeholder="Content" style="height: 200px"
-            required></textarea>
+          <label for="post-content">Post Content <small>(Markdown supported)</small>:</label>
+          <textarea id="post-content" name="content" class="form-control"
+            placeholder="Write your post here using Markdown..." style="height: 300px" required></textarea>
+
+          <div class="form-check mt-2">
+            <input class="form-check-input" type="checkbox" id="togglePreview">
+            <label class="form-check-label" for="togglePreview">Show Markdown Preview</label>
+          </div>
+
+          <div id="markdown-preview" class="mt-3 p-3 border rounded bg-light" style="display: none;"></div>
         </div>
 
-        <!-- Submit button -->
-        <div class="text-end mt-5 text-center" action="/create-post/publish-post" method="POST">
+        <!-- Submit -->
+        <div class="text-end mt-5 text-center">
           <button type="submit" class="btn btn-submit">Publish Post</button>
         </div>
       </form>
     </div>
-
   </section>
 
   <!---------------------------- Footer ---------------------------->

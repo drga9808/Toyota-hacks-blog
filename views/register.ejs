@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Register | Toyota Hacks</title>
+    <link rel="stylesheet" href="/styles/login.css" />
+    <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css" />
+    <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet'>
+
+</head>
+
+<body>
+
+    <!-- Navbar -->
+    <%- include('partials/header') %>
+
+        <div class="login-container">
+            <h2 class="login-title">Register in Toyota Hacks</h2>
+            <form action="/register" method="POST">
+                <div class="mb-3">
+                    <label for="name" class="form-label">Name</label>
+                    <input type="name" class="form-control" id="name" name="name" required />
+                </div>
+
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email address</label>
+                    <input type="email" class="form-control" id="email" name="email" required />
+                </div>
+
+                <div class="mb-3">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" class="form-control" id="password" name="password" required />
+                </div>
+
+                <button type="submit" class="btn-login w-60 py-2 rounded">Register</button>
+
+                <div class="form-text mt-3 text-center">
+                    Already an user? <a href="/login">Login</a>
+                </div>
+            </form>
+        </div>
+
+        <!-- Footer -->
+        <%- include('partials/footer') %>
+
+</body>
+
+</html>
