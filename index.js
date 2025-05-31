@@ -1,7 +1,7 @@
 //============================================================================================
 //     ============================== Initial Setup ==============================
 //============================================================================================
-
+import session from "express-session";
 import dotenv from "dotenv";
 import fs from "fs";
 import path from "path";
@@ -46,6 +46,15 @@ app.use(express.static("public"));
 
 // Enable form data parsing
 app.use(express.urlencoded({ extended: true }));
+
+// Handle different sessions for different users
+app.use(
+  session({
+    secret: "keyboard cat", // change this in production
+    resave: false,
+    saveUninitialized: true,
+  })
+);
 
 // Start the server
 app.listen(port, () => {
@@ -119,49 +128,91 @@ function saveUsers(users) {
 let posts = loadPosts();
 let users = loadUsers();
 
+// Demo Post (Is not altered after user's session is finished)
+const demoPostSlug = "test-post-example";
+
+const demoPostOriginal = {
+  title: "How to Test Edit and Delete Features",
+  date: "2025-05-31",
+  createdBy: "test@toyotahacksblog.com",
+  category: "Test",
+  readTime: "1 min read",
+  image:
+    "https://res.cloudinary.com/dcco4yq4l/image/upload/v1748489999/sample-image.png",
+  description:
+    "This is a test post to try editing and deleting. Use it to experiment safely.",
+  content:
+    "Welcome to the Toyota Hacks Blog demo account!\n\nThis post was created for test purposes.\n\n- Try editing the title or text.\n- Then delete it to see how it works.\n\nIf something breaks, you can always recreate this post. 🚀",
+};
+
+// Reset the post at server startup
+posts[demoPostSlug] = demoPostOriginal;
+savePosts(posts);
+
 //============================================================================================
 //     ============================== Routes - Pages ==============================
 //============================================================================================
 
 //********************** Get the main page **********************
 app.get("/", (req, res) => {
-  res.render("index", { posts });
+  const currentUser = req.session.user;
+  res.render("index", { posts, currentUser, users });
 });
 
 //********************** Get a Specific Post **********************
 app.get("/posts/:slug", (req, res) => {
   const slug = req.params.slug;
   const post = posts[slug];
+  const currentUser = req.session.user;
   if (!post) return res.status(404).send("Post not found");
 
   // Convert Markdown content to HTML
   const htmlContent = marked.parse(post.content || "");
 
-  res.render("post", { slug, post: { ...post, content: htmlContent } });
+  res.render("post", {
+    slug,
+    post: { ...post, content: htmlContent },
+    currentUser,
+    users,
+  });
 });
 
 //********************** Create a post **********************
 app.get("/create-post", (req, res) => {
-  res.render("create-post");
+  if (!req.session.user) {
+    req.session.redirectAfterLogin = "/create-post";
+    return res.redirect("/login");
+  }
+
+  res.render("create-post", { currentUser: req.session.user, users });
 });
 
 //********************** Edit an existing post **********************
 app.get("/post/edit/:slug", (req, res) => {
   const slug = req.params.slug;
   const post = posts[slug];
-  if (!post) return res.status(404).send("Post not found");
+  const currentUser = req.session.user;
 
-  res.render("edit-post", { slug, post });
+  if (!post) return res.status(404).send("Post not found");
+  if (!currentUser || post.createdBy !== currentUser) {
+    return res.status(403).send("Unauthorized");
+  }
+
+  res.render("edit-post", { post, slug, currentUser, users });
 });
 
 //********************** Open Login page **********************
 app.get("/login", (req, res) => {
-  res.render("login", { error: undefined });
+  res.render("login", {
+    error: undefined,
+    currentUser: req.session.user,
+    users,
+  });
 });
 
 //********************** Open Register page **********************
 app.get("/register", (req, res) => {
-  res.render("register");
+  res.render("register", { currentUser: req.session.user, users });
 });
 
 //============================================================================================
@@ -170,6 +221,8 @@ app.get("/register", (req, res) => {
 
 //********************** Create a new post **********************
 app.post("/create-post/publish-post", upload.single("image"), (req, res) => {
+  if (!req.session.user) return res.redirect("/login");
+
   const { title, category, readTime, description, content } = req.body;
   const slug = getUniqueSlug(title, posts);
   const date = new Date().toISOString().split("T")[0];
@@ -180,6 +233,7 @@ app.post("/create-post/publish-post", upload.single("image"), (req, res) => {
   posts[slug] = {
     title,
     date,
+    createdBy: req.session.user,
     category,
     readTime,
     image: imageUrl,
@@ -189,13 +243,22 @@ app.post("/create-post/publish-post", upload.single("image"), (req, res) => {
   };
 
   savePosts(posts);
+
   res.redirect(`/posts/${slug}`);
 });
 
 //********************** Update existing post **********************
 app.post("/edit-post/:slug", upload.single("image"), async (req, res) => {
   const slug = req.params.slug;
-  if (!posts[slug]) return res.status(404).send("Post not found");
+  const currentUser = req.session.user;
+  const post = posts[slug];
+  const date = new Date().toISOString().split("T")[0];
+
+  if (!post) return res.status(404).send("Post not found");
+
+  if (!currentUser || post.createdBy !== currentUser) {
+    return res.status(403).send("Unauthorized");
+  }
 
   const oldPublicId = posts[slug].public_id;
 
@@ -213,8 +276,9 @@ app.post("/edit-post/:slug", upload.single("image"), async (req, res) => {
   }
 
   posts[slug] = {
+    ...post,
     title: req.body.title,
-    date: req.body.date,
+    date,
     category: req.body.category,
     readTime: req.body.readTime,
     image,
@@ -231,8 +295,14 @@ app.post("/edit-post/:slug", upload.single("image"), async (req, res) => {
 //********************** Delete an existing post **********************
 app.post("/edit-post/delete-post/:slug", async (req, res) => {
   const slug = req.params.slug;
+  const currentUser = req.session.user;
+  const post = posts[slug];
 
-  if (!posts[slug]) return res.status(404).send("Post not found");
+  if (!post) return res.status(404).send("Post not found");
+
+  if (!currentUser || post.createdBy !== currentUser) {
+    return res.status(403).send("Unauthorized");
+  }
 
   const publicId = posts[slug].public_id;
 
@@ -248,6 +318,7 @@ app.post("/edit-post/delete-post/:slug", async (req, res) => {
 
   delete posts[slug];
   savePosts(posts);
+
   res.redirect("/");
 });
 
@@ -258,10 +329,20 @@ app.post("/login", (req, res) => {
 
   if (user && user.password === password) {
     // Successful login
-    res.redirect("/");
+    req.session.user = email;
+
+    // Redirect to the saved page (if any), or default to "/"
+    const redirectTo = req.session.redirectAfterLogin || "/";
+    delete req.session.redirectAfterLogin;
+
+    return res.redirect(redirectTo);
   } else {
     // Failed login — render with error
-    res.render("login", { error: "Invalid email or password." });
+    res.render("login", {
+      error: "Invalid email or password.",
+      currentUser: req.session.user,
+      users,
+    });
   }
 });
 
@@ -269,12 +350,23 @@ app.post("/login", (req, res) => {
 app.post("/register", (req, res) => {
   const { name, email, password } = req.body;
 
-  users[name] = {
-    email,
+  users[email] = {
+    name,
     password,
   };
 
   saveUsers(users);
 
   res.redirect("/login");
+});
+
+//********************** Logout **********************
+app.get("/logout", (req, res) => {
+  // Restore demo post
+  posts[demoPostSlug] = demoPostOriginal;
+  savePosts(posts);
+
+  req.session.destroy(() => {
+    res.redirect("/login");
+  });
 });

@@ -2,6 +2,7 @@
   "toyota-original-parts": {
     "title": "Toyota Original Parts",
     "date": "2025-05-27",
+    "createdBy": "danirubengarci@gmail.com",
     "category": "Parts",
     "readTime": "4 min read",
     "image": "https://res.cloudinary.com/dcco4yq4l/image/upload/w_1400,h_900,c_fill,g_auto,f_auto,q_auto/v1748372263/parts.png",
@@ -10,8 +11,9 @@
   },
   "toyota-power-steering": {
     "title": "Toyota Power Steering",
-    "date": "2025-05-29",
-    "category": "Common Issues",
+    "date": "2025-05-31",
+    "createdBy": "danirubengarci@gmail.com",
+    "category": "Repairs",
     "readTime": "4 min read",
     "image": "https://res.cloudinary.com/dcco4yq4l/image/upload/w_1400,h_900,c_fill,g_auto,f_auto,q_auto/v1748487114/power-steering.png",
     "description": "Toyota Power Steering problems explained: when to replace parts and why leaks aren’t always urgent.",
@@ -20,10 +22,21 @@
   "toyota-suspension-replacement": {
     "title": "When and How to Replace Toyota Suspension Components",
     "date": "2025-05-28",
+    "createdBy": "danirubengarci@gmail.com",
     "category": "Repairs",
     "readTime": "4 min read",
     "image": "https://res.cloudinary.com/dcco4yq4l/image/upload/w_1400,h_900,c_fill,g_auto,f_auto,q_auto/v1748487407/suspension.png",
     "description": "Should you change struts, shocks, or springs on your Toyota? Learn when it's necessary and which parts to avoid.",
     "content": "Your Toyota's suspension system plays a critical role in both comfort and safety. Whether you're dealing with worn struts, noisy mounts, or sagging springs, knowing what to replace — and when — can save you money and prevent unnecessary repairs.\r\n\r\n### Struts\r\n\r\nStruts are essential for absorbing road impacts and stabilizing your vehicle. But contrary to popular belief, **you only need to replace them when there's a clear problem**.\r\n\r\n- **Leaking Below the Mid Plate:** If fluid is leaking from below the middle section of the strut and you're hearing unusual noises, it’s time for a replacement.\r\n- **Leaking Above the Mid Plate:** A small amount of fluid above the middle plate doesn’t necessarily mean the strut has failed. Monitor it before rushing to replace.\r\n- **Important Tip:** Always use a **new original Toyota nut** when installing a new strut to ensure proper torque and fitment.\r\n\r\n### Shock Absorbers\r\n\r\nShock absorbers reduce bounce and maintain tire contact with the road. Like struts, they should only be replaced when they're actually worn out.\r\n\r\n- If they're leaking **below the halfway point** and causing noise, they should be replaced.\r\n- If the leak is minor and not accompanied by performance issues, monitor them rather than replacing prematurely.\r\n\r\n### Springs\r\n\r\nSprings rarely need replacement unless:\r\n\r\n- They're visibly **cracked or broken**.\r\n- The car sits **noticeably lower** than normal due to old, worn-out springs.\r\n\r\n### Strut Mounts\r\n\r\nStrut mounts are a common source of noise in aging suspensions. Always use **OEM (original)** mounts when replacing them.\r\n\r\n- If the rubber inside the mount is crushed or has come loose, it can cause clunking sounds and should be replaced immediately.\r\n\r\n### Quick Struts vs. OEM Component Replacement\r\n\r\n**Avoid using quick struts** whenever possible. These pre-assembled units often use lower-quality parts and may not match your Toyota's original ride quality.\r\n\r\nThe best approach is to replace only the parts that are actually worn or broken — "
+  },
+  "test-post-example": {
+    "title": "How to Test Edit and Delete Features",
+    "date": "2025-05-31",
+    "createdBy": "test@toyotahacksblog.com",
+    "category": "Test",
+    "readTime": "1 min read",
+    "image": "https://res.cloudinary.com/dcco4yq4l/image/upload/v1748489999/sample-image.png",
+    "description": "This is a test post to try editing and deleting. Use it to experiment safely.",
+    "content": "Welcome to the Toyota Hacks Blog demo account!\r\n\r\nThis post was created for test purposes.\r\n\r\n- Try editing the title or text.\r\n- Then delete it to see how it works.\r\n\r\nIf something breaks, you can always recreate this post. 🚀"
   }
 }

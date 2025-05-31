@@ -70,6 +70,9 @@
                                         </li>
                                         <li>📅 <%= post.date %>
                                         </li>
+                                        <li>
+                                            👤 <%= users[post.createdBy]?.name || post.createdBy %>
+                                        </li>
                                         <li>⏱ <%= post.readTime %>
                                         </li>
                                     </ul>

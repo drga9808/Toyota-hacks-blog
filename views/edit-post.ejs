@@ -12,12 +12,6 @@
                     <input type="text" name="title" value="<%= post.title %>" required class="form-control">
                 </div>
 
-                <!-- Post Date -->
-                <div class="placeholders">
-                    <label>Date:</label>
-                    <input type="date" name="date" value="<%= post.date %>" class="form-control" readonly>
-                </div>
-
                 <!-- Category -->
                 <div class="placeholders">
                     <label>Category:</label>
@@ -26,6 +20,7 @@
                         <option value="Repairs" <%=post.category==='Repairs' ? 'selected' : '' %>>Repairs</option>
                         <option value="Common Issues" <%=post.category==='Common Issues' ? 'selected' : '' %>>Common
                             Issues</option>
+                        <option value="Test" <%=post.category==='Test' ? 'selected' : '' %>>Test</option>
                     </select>
                 </div>
 

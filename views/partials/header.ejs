@@ -45,13 +45,28 @@
                         <li class="nav-item">
                             <a class="nav-link" href="/create-post">Create Post</a>
                         </li>
-                        <form action="/login" method="GET">
-                            <li class="nav-item ms-lg-4">
-                                <a class="btn btn-outline-light btn-sm px-3 py-1 mt-1" href="/login">
-                                    <i class="fas fa-sign-in-alt me-1"></i> Login
+                        <% if (currentUser) { %>
+                            <li class="nav-item dropdown ms-lg-4">
+                                <a class="nav-link dropdown-toggle text-white" href="#" id="userMenu" role="button"
+                                    data-bs-toggle="dropdown" aria-expanded="false">
+                                    👤 <%= users[currentUser]?.name || currentUser %>
                                 </a>
+                                <ul class="dropdown-menu dropdown-menu-end shadow-sm w-50" aria-labelledby="userMenu">
+                                    <li>
+                                        <a class="dropdown-item d-flex align-items-center gap-2 text-danger"
+                                            href="/logout">
+                                            <i class="fas fa-sign-out-alt"></i> Logout
+                                        </a>
+                                    </li>
+                                </ul>
                             </li>
-                        </form>
+                            <% } else { %>
+                                <li class="nav-item ms-lg-4">
+                                    <a class="btn btn-outline-light btn-sm px-3 py-1 mt-1" href="/login">
+                                        <i class="fas fa-sign-in-alt me-1"></i> Login
+                                    </a>
+                                </li>
+                                <% } %>
                     </ul>
                 </div>
 
