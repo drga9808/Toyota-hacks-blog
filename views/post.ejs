@@ -25,7 +25,8 @@
 
     <p class="post-user pt-2">
       <span>
-        <strong>Created by: </strong><%= users[post.createdBy]?.name %>
+        <strong>Created by: </strong>
+        <%= users.find(u=> u.email === post.createdBy)?.name || post.createdBy %>
       </span>
     </p>
 

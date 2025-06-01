@@ -47,11 +47,7 @@
                         - return (-#) -> "a" comes before "b".
                         - return (0) -> The order stays the same.
                         - return (+#) -> "a" comes after "b". -->
-                <% Object.keys(posts) .sort((a, b)=>
-                    new Date(posts[b].date) - new Date(posts[a].date))
-                    .forEach(function(slug) {
-                    const post = posts[slug];
-                    %>
+                <% posts.forEach(function(post) { %>
                     <div class="col d-flex">
                         <div class="card flex-fill d-flex flex-column">
                             <img src="<%= post.image %>" class="card-img-top" alt="<%= post.title %>">
@@ -63,22 +59,19 @@
                                     <p class="card-text pt-4">
                                         <%= post.description %>
                                     </p>
-
                                     <ul class="post-meta-list pt-2">
                                         <li><i class="fas fa-folder-open"></i>
                                             <%= post.category %>
                                         </li>
                                         <li>📅 <%= post.date %>
                                         </li>
-                                        <li>
-                                            👤 <%= users[post.createdBy]?.name || post.createdBy %>
+                                        <li>👤 <%= users.find(u=> u.email === post.createdBy)?.name || post.createdBy %>
                                         </li>
                                         <li>⏱ <%= post.readTime %>
                                         </li>
                                     </ul>
                                 </div>
-
-                                <form action="/posts/<%= slug %>" method="GET">
+                                <form action="/posts/<%= post.slug %>" method="GET">
                                     <div class="card-actions justify-content-center mt-3 pb-3">
                                         <button type="submit" class="btn btn-readmore">Read more</button>
                                     </div>
@@ -86,7 +79,6 @@
                             </div>
                         </div>
                     </div>
-
                     <% }); %>
             </div>
         </div>

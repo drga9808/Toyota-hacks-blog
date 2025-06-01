@@ -37,7 +37,7 @@
                         <div class="upload-content">
                             <i class="fas fa-file-upload fa-2x"></i>
                             <p><strong>Upload an Image</strong></p>
-                            <p class="file-name">Current: <%= post.image.split("/").pop() %>
+                            <p class="file-name">Current: <%= post.public_id || post.image.split("/").pop() %>
                             </p>
                         </div>
                         <input type="file" id="post-image" name="image" accept="image/*" style="display: none;">

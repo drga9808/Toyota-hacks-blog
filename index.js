@@ -3,19 +3,32 @@
 //============================================================================================
 import session from "express-session";
 import dotenv from "dotenv";
-import fs from "fs";
 import path from "path";
 import express from "express";
 import multer from "multer";
+import mongoose from "mongoose";
+import MongoStore from "connect-mongo";
 import { fileURLToPath } from "url";
 import { cloudinary, storage } from "./utils/cloudinary.js";
 import { marked } from "marked";
+import { generateSlug } from "./utils/slug.js";
+import { demoPostSlug, demoPostOriginal } from "./views/data/demoPost.js";
+
+// Database
+import User from "./models/User.js";
+import Post from "./models/Post.js";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Load environment variables
 dotenv.config();
+
+// Connect to MongoDB
+mongoose
+  .connect(process.env.MONGO_URI)
+  .then(() => console.log("✅ Connected to MongoDB"))
+  .catch((err) => console.error("❌ MongoDB connection error:", err));
 
 // Configure Multer to use Cloudinary for image uploads
 const upload = multer({ storage });
@@ -24,185 +37,171 @@ const upload = multer({ storage });
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Path to JSON files
-const postsFilePath = path.join(__dirname, "views", "data", "posts.json");
-const usersFilePath = path.join(__dirname, "views", "data", "users.json");
-
 // View engine configuration
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
-// Serve Bootstrap from node_modules
+// Serve static files
 app.use(
   "/bootstrap",
   express.static(__dirname + "/node_modules/bootstrap/dist")
 );
-
-// Serve static JavaScript files
 app.use("/scripts", express.static(path.join(__dirname, "public", "scripts")));
-
-// Serve all other static files (images, styles, etc.)
 app.use(express.static("public"));
 
 // Enable form data parsing
 app.use(express.urlencoded({ extended: true }));
 
-// Handle different sessions for different users
+// Session configuration
+app.set("trust proxy", 1); // required when using Fly.io/Cloudflare
 app.use(
   session({
-    secret: "keyboard cat", // change this in production
+    secret: process.env.SESSION_SECRET,
     resave: false,
-    saveUninitialized: true,
+    saveUninitialized: false,
+    store: MongoStore.create({
+      mongoUrl: process.env.MONGO_URI,
+    }),
+    cookie: {
+      httpOnly: true,
+      maxAge: 1000 * 60 * 60 * 24, // 1 day
+      secure: process.env.NODE_ENV === "production",
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+    },
   })
 );
 
-// Start the server
-app.listen(PORT, "0.0.0.0", () => {
-  console.log(`Server running on http://0.0.0.0:${PORT}`);
+//============================================================================================
+//     ============================== Placeholder Routes ==============================
+//============================================================================================
+
+// These still rely on local `posts` and `users` variables
+// We will update them one-by-one in the next steps
+
+// Example:
+app.get("/", async (req, res) => {
+  const currentUser = req.session.user;
+
+  try {
+    const posts = await Post.find().sort({ date: -1 });
+    const users = await User.find();
+
+    res.render("index", { posts, currentUser, users });
+  } catch (error) {
+    console.error("Failed to fetch data:", error);
+    res.status(500).send("Internal Server Error");
+  }
 });
 
 //============================================================================================
-//     ============================== Functions ==============================
+//     ============================== Start Server ==============================
 //============================================================================================
 
-// Load existing posts from JSON file
-function loadPosts() {
-  try {
-    const data = fs.readFileSync(postsFilePath, "utf-8");
-    return JSON.parse(data);
-  } catch (err) {
-    console.error("Failed to load posts:", err);
-    return {};
+app.listen(PORT, "0.0.0.0", () => {
+  console.log(`🚀 Server running on http://0.0.0.0:${PORT}`);
+});
+
+//============================================================================================
+//     ============================== Ensure Demo Post Exists ==============================
+//============================================================================================
+async function ensureDemoPostExists() {
+  const exists = await Post.findOne({ slug: demoPostSlug });
+  if (!exists) {
+    await Post.create(demoPostOriginal);
+    console.log("✅ Demo post created");
+  } else {
+    console.log("ℹ️ Demo post already exists");
   }
 }
 
-// Save updated posts back to JSON file
-function savePosts(posts) {
-  fs.writeFileSync(postsFilePath, JSON.stringify(posts, null, 2), "utf-8");
-}
-
-// Generate URL-friendly slug from post title
-function generateSlug(title) {
-  return title
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .replace(/[^\w\s-]/g, "")
-    .trim()
-    .replace(/\s+/g, "-");
-}
-
-// Ensure slug is unique by appending a number if needed
-function getUniqueSlug(title, posts) {
-  let baseSlug = generateSlug(title);
-  let slug = baseSlug;
-  let counter = 1;
-
-  while (posts[slug]) {
-    slug = `${baseSlug}-${counter++}`;
-  }
-
-  return slug;
-}
-
-// Load existing users from JSON file
-function loadUsers() {
-  try {
-    const data = fs.readFileSync(usersFilePath, "utf-8");
-    return JSON.parse(data);
-  } catch (err) {
-    console.error("Failed to load users:", err);
-    return {};
-  }
-}
-
-// Save updated users back to JSON file
-function saveUsers(users) {
-  fs.writeFileSync(usersFilePath, JSON.stringify(users, null, 2), "utf-8");
-}
-
-//============================================================================================
-//     ============================== Load Data ==============================
-//============================================================================================
-
-let posts = loadPosts();
-let users = loadUsers();
-
-// Demo Post (Is not altered after user's session is finished)
-const demoPostSlug = "test-post-example";
-
-const demoPostOriginal = {
-  title: "How to Test Edit and Delete Features",
-  date: "2025-05-31",
-  createdBy: "test@toyotahacksblog.com",
-  category: "Test",
-  readTime: "1 min read",
-  image:
-    "https://res.cloudinary.com/dcco4yq4l/image/upload/v1748489999/sample-image.png",
-  description:
-    "This is a test post to try editing and deleting. Use it to experiment safely.",
-  content:
-    "Welcome to the Toyota Hacks Blog demo account!\n\nThis post was created for test purposes.\n\n- Try editing the title or text.\n- Then delete it to see how it works.\n\nIf something breaks, you can always recreate this post. 🚀",
-};
-
-// Reset the post at server startup
-posts[demoPostSlug] = demoPostOriginal;
-savePosts(posts);
+ensureDemoPostExists();
 
 //============================================================================================
 //     ============================== Routes - Pages ==============================
 //============================================================================================
 
 //********************** Get the main page **********************
-app.get("/", (req, res) => {
+app.get("/", async (req, res) => {
+  console.log("Current session user:", req.session.user); // ✅ debug
+  
   const currentUser = req.session.user;
-  res.render("index", { posts, currentUser, users });
+
+  try {
+    const posts = await Post.find().sort({ date: -1 });
+    const users = await User.find();
+
+    res.render("index", { posts, currentUser, users });
+  } catch (error) {
+    console.error("Failed to fetch data:", error);
+    res.status(500).send("Internal Server Error");
+  }
 });
 
 //********************** Get a Specific Post **********************
-app.get("/posts/:slug", (req, res) => {
+app.get("/posts/:slug", async (req, res) => {
   const slug = req.params.slug;
-  const post = posts[slug];
   const currentUser = req.session.user;
-  if (!post) return res.status(404).send("Post not found");
 
-  // Convert Markdown content to HTML
-  const htmlContent = marked.parse(post.content || "");
+  try {
+    const post = await Post.findOne({ slug });
+    const users = await User.find();
 
-  res.render("post", {
-    slug,
-    post: { ...post, content: htmlContent },
-    currentUser,
-    users,
-  });
+    if (!post) return res.status(404).send("Post not found");
+
+    // Convert Markdown content to HTML
+    const htmlContent = marked.parse(post.content || "");
+
+    res.render("post", {
+      slug,
+      post: { ...post.toObject(), content: htmlContent },
+      currentUser,
+      users,
+    });
+  } catch (error) {
+    console.error("Failed to load post:", error);
+    res.status(500).send("Internal Server Error");
+  }
 });
 
 //********************** Create a post **********************
-app.get("/create-post", (req, res) => {
+app.get("/create-post", async (req, res) => {
   if (!req.session.user) {
     req.session.redirectAfterLogin = "/create-post";
     return res.redirect("/login");
   }
 
-  res.render("create-post", { currentUser: req.session.user, users });
+  const users = await User.find();
+  res.render("create-post", {
+    currentUser: req.session.user,
+    users,
+  });
 });
 
 //********************** Edit an existing post **********************
-app.get("/post/edit/:slug", (req, res) => {
+app.get("/post/edit/:slug", async (req, res) => {
   const slug = req.params.slug;
-  const post = posts[slug];
   const currentUser = req.session.user;
 
-  if (!post) return res.status(404).send("Post not found");
-  if (!currentUser || post.createdBy !== currentUser) {
-    return res.status(403).send("Unauthorized");
-  }
+  try {
+    const post = await Post.findOne({ slug });
+    const users = await User.find();
 
-  res.render("edit-post", { post, slug, currentUser, users });
+    if (!post) return res.status(404).send("Post not found");
+    if (!currentUser || post.createdBy !== currentUser) {
+      return res.status(403).send("Unauthorized");
+    }
+
+    res.render("edit-post", { post, slug, currentUser, users });
+  } catch (err) {
+    console.error("Edit page error:", err);
+    res.status(500).send("Internal Server Error");
+  }
 });
 
 //********************** Open Login page **********************
-app.get("/login", (req, res) => {
+app.get("/login", async (req, res) => {
+  const users = await User.find();
+
   res.render("login", {
     error: undefined,
     currentUser: req.session.user,
@@ -211,8 +210,13 @@ app.get("/login", (req, res) => {
 });
 
 //********************** Open Register page **********************
-app.get("/register", (req, res) => {
-  res.render("register", { currentUser: req.session.user, users });
+app.get("/register", async (req, res) => {
+  const users = await User.find();
+
+  res.render("register", {
+    currentUser: req.session.user,
+    users,
+  });
 });
 
 //============================================================================================
@@ -220,151 +224,198 @@ app.get("/register", (req, res) => {
 //============================================================================================
 
 //********************** Create a new post **********************
-app.post("/create-post/publish-post", upload.single("image"), (req, res) => {
-  if (!req.session.user) return res.redirect("/login");
+app.post(
+  "/create-post/publish-post",
+  upload.single("image"),
+  async (req, res) => {
+    if (!req.session.user) return res.redirect("/login");
 
-  const { title, category, readTime, description, content } = req.body;
-  const slug = getUniqueSlug(title, posts);
-  const date = new Date().toISOString().split("T")[0];
+    const { title, category, readTime, description, content } = req.body;
 
-  const imageUrl = req.file?.path;
-  const publicId = req.file?.filename;
+    try {
+      // Generate base slug
+      const baseSlug = generateSlug(title);
+      let slug = baseSlug;
+      let counter = 1;
 
-  posts[slug] = {
-    title,
-    date,
-    createdBy: req.session.user,
-    category,
-    readTime,
-    image: imageUrl,
-    public_id: publicId,
-    description,
-    content,
-  };
+      // Ensure slug is unique
+      while (await Post.findOne({ slug })) {
+        slug = `${baseSlug}-${counter++}`;
+      }
 
-  savePosts(posts);
+      const imageUrl = req.file?.path;
+      const publicId = req.file?.filename;
+      const date = new Date().toISOString().split("T")[0];
 
-  res.redirect(`/posts/${slug}`);
-});
+      await Post.create({
+        title,
+        slug,
+        date,
+        createdBy: req.session.user,
+        category,
+        readTime,
+        image: imageUrl,
+        public_id: publicId,
+        description,
+        content,
+      });
+
+      res.redirect(`/posts/${slug}`);
+    } catch (err) {
+      console.error("Failed to create post:", err);
+      res.status(500).send("Internal Server Error");
+    }
+  }
+);
 
 //********************** Update existing post **********************
 app.post("/edit-post/:slug", upload.single("image"), async (req, res) => {
   const slug = req.params.slug;
   const currentUser = req.session.user;
-  const post = posts[slug];
   const date = new Date().toISOString().split("T")[0];
 
-  if (!post) return res.status(404).send("Post not found");
+  try {
+    const post = await Post.findOne({ slug });
+    if (!post) return res.status(404).send("Post not found");
 
-  if (!currentUser || post.createdBy !== currentUser) {
-    return res.status(403).send("Unauthorized");
+    if (!currentUser || post.createdBy !== currentUser) {
+      return res.status(403).send("Unauthorized");
+    }
+
+    let image = post.image;
+    let public_id = post.public_id;
+
+    // Handle new image upload
+    if (req.file) {
+      if (post.public_id) {
+        try {
+          await cloudinary.uploader.destroy(post.public_id);
+        } catch (err) {
+          console.error("Cloudinary delete error:", err);
+        }
+      }
+
+      image = req.file.path;
+      public_id = req.file.filename;
+    }
+
+    await Post.updateOne(
+      { slug },
+      {
+        $set: {
+          title: req.body.title,
+          date,
+          category: req.body.category,
+          readTime: req.body.readTime,
+          image,
+          public_id,
+          description: req.body.description,
+          content: req.body.content,
+        },
+      }
+    );
+
+    res.redirect(`/posts/${slug}`);
+  } catch (err) {
+    console.error("Failed to update post:", err);
+    res.status(500).send("Internal Server Error");
   }
-
-  const oldPublicId = posts[slug].public_id;
-
-  // Handle new image upload
-  let image = posts[slug].image;
-  let public_id = oldPublicId;
-
-  if (req.file) {
-    // Delete old image from Cloudinary
-    if (oldPublicId) await cloudinary.uploader.destroy(oldPublicId);
-
-    // Update with new image info
-    image = req.file.path;
-    public_id = req.file.filename;
-  }
-
-  posts[slug] = {
-    ...post,
-    title: req.body.title,
-    date,
-    category: req.body.category,
-    readTime: req.body.readTime,
-    image,
-    public_id,
-    description: req.body.description,
-    content: req.body.content,
-  };
-
-  savePosts(posts);
-
-  res.redirect(`/posts/${slug}`);
 });
 
 //********************** Delete an existing post **********************
 app.post("/edit-post/delete-post/:slug", async (req, res) => {
   const slug = req.params.slug;
   const currentUser = req.session.user;
-  const post = posts[slug];
 
-  if (!post) return res.status(404).send("Post not found");
-
-  if (!currentUser || post.createdBy !== currentUser) {
-    return res.status(403).send("Unauthorized");
-  }
-
-  const publicId = posts[slug].public_id;
-
-  // Try deleting image from Cloudinary
   try {
-    if (publicId) {
-      await cloudinary.uploader.destroy(publicId);
-      console.log(`Image ${publicId} deleted from Cloudinary`);
+    const post = await Post.findOne({ slug });
+
+    if (!post) return res.status(404).send("Post not found");
+
+    if (!currentUser || post.createdBy !== currentUser) {
+      return res.status(403).send("Unauthorized");
     }
+
+    const publicId = post.public_id;
+
+    // Try deleting image from Cloudinary
+    try {
+      if (publicId) {
+        await cloudinary.uploader.destroy(publicId);
+        console.log(`🗑️ Image ${publicId} deleted from Cloudinary`);
+      }
+    } catch (err) {
+      console.error("Failed to delete image from Cloudinary:", err);
+    }
+
+    await Post.deleteOne({ slug });
+    res.redirect("/");
   } catch (err) {
-    console.error("Failed to delete image from Cloudinary:", err);
+    console.error("Failed to delete post:", err);
+    res.status(500).send("Internal Server Error");
   }
-
-  delete posts[slug];
-  savePosts(posts);
-
-  res.redirect("/");
 });
 
 //********************** Validate login info **********************
-app.post("/login", (req, res) => {
+app.post("/login", async (req, res) => {
   const { email, password } = req.body;
-  const user = users[email];
 
-  if (user && user.password === password) {
-    // Successful login
-    req.session.user = email;
+  try {
+    const user = await User.findOne({ email });
+    const users = await User.find();
 
-    // Redirect to the saved page (if any), or default to "/"
-    const redirectTo = req.session.redirectAfterLogin || "/";
-    delete req.session.redirectAfterLogin;
+    if (user && user.password === password) {
+      req.session.user = email;
 
-    return res.redirect(redirectTo);
-  } else {
-    // Failed login — render with error
-    res.render("login", {
-      error: "Invalid email or password.",
-      currentUser: req.session.user,
-      users,
-    });
+      const redirectTo = req.session.redirectAfterLogin || "/";
+      delete req.session.redirectAfterLogin;
+
+      return res.redirect(redirectTo);
+    } else {
+      res.render("login", {
+        error: "Invalid email or password.",
+        currentUser: req.session.user,
+        users,
+      });
+    }
+  } catch (err) {
+    console.error("Login error:", err);
+    res.status(500).send("Internal Server Error");
   }
 });
 
 //********************** Register new user **********************
-app.post("/register", (req, res) => {
+app.post("/register", async (req, res) => {
   const { name, email, password } = req.body;
 
-  users[email] = {
-    name,
-    password,
-  };
+  try {
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      const users = await User.find();
+      return res.render("register", {
+        currentUser: req.session.user,
+        users,
+        error: "User already exists.",
+      });
+    }
 
-  saveUsers(users);
-
-  res.redirect("/login");
+    await User.create({ name, email, password });
+    res.redirect("/login");
+  } catch (err) {
+    console.error("Registration error:", err);
+    res.status(500).send("Internal Server Error");
+  }
 });
 
 //********************** Logout **********************
-app.get("/logout", (req, res) => {
-  // Restore demo post
-  posts[demoPostSlug] = demoPostOriginal;
-  savePosts(posts);
+app.get("/logout", async (req, res) => {
+  try {
+    await Post.findOneAndUpdate({ slug: demoPostSlug }, demoPostOriginal, {
+      upsert: true,
+    });
+  } catch (err) {
+    console.error("Failed to restore demo post:", err);
+  }
 
   req.session.destroy(() => {
     res.redirect("/login");

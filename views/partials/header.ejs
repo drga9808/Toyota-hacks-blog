@@ -14,6 +14,8 @@
     <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet'>
     <!-- Font Awasome (Icons) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- DOMPurify -->
+    <script src="https://cdn.jsdelivr.net/npm/dompurify@3.0.5/dist/purify.min.js"></script>
 
 </head>
 
@@ -49,7 +51,7 @@
                             <li class="nav-item dropdown ms-lg-4">
                                 <a class="nav-link dropdown-toggle text-white" href="#" id="userMenu" role="button"
                                     data-bs-toggle="dropdown" aria-expanded="false">
-                                    👤 <%= users[currentUser]?.name || currentUser %>
+                                    👤  <%= users.find(u=> u.email === currentUser)?.name || currentUser %>
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-end shadow-sm w-50" aria-labelledby="userMenu">
                                     <li>
