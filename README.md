@@ -84,4 +84,4 @@ Use the demo credentials on the login page to explore the site.
 
 ## 🧼 Live Site
 
-Visit: [Toyota Hacks Blog](toyota-blog.drga98.com)
+Visit: [Toyota Hacks Blog](https://toyota-blog.drga98.com)
