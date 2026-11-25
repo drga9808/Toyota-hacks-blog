@@ -39,28 +39,30 @@ toyota-blog/
 ├── routes/               # Express route files
 ├── models/               # Mongoose schemas for MongoDB
 ├── cloudinary.js         # Cloudinary config
-├── app.js                # Main server file
+├── index.js                # Main server file
 ├── .env                  # Environment variables (Mongo URI, etc.)
 ```
 
 ---
 
+<a name="local-setup"></a>
+
 ## 📦 Getting Started
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/your-username/toyota-hacks-blog.git
-cd toyota-hacks-blog
+git clone https://github.com/drga9808/Toyota-hacks-blog.git
+cd Toyota-hacks-blog
 ```
 
 2. Install dependencies:
 ```bash
-npm install
+npm ci
 ```
 
 3. Create a `.env` file and add:
 ```
-MONGODB_URI=your_mongodb_connection_string
+MONGO_URI=your_mongodb_connection_string
 CLOUDINARY_CLOUD_NAME=your_cloud_name
 CLOUDINARY_API_KEY=your_api_key
 CLOUDINARY_API_SECRET=your_api_secret
@@ -69,7 +71,7 @@ SESSION_SECRET=your_session_secret
 
 4. Start the server:
 ```bash
-node app.js
+node index.js
 ```
 
 5. Visit `http://localhost:3000` in your browser.
@@ -82,6 +84,6 @@ Use the demo credentials on the login page to explore the site.
 
 ---
 
-## 🧼 Live Site
+## Try the app locally
 
-Visit: [Toyota Hacks Blog](https://toyota-blog.drga98.com)
+Follow the [local setup instructions](#local-setup) to run Toyota Hacks Blog on your machine.
